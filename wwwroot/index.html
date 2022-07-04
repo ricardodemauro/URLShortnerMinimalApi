@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Url Shortner .NET 6</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+</head>
+<body>
+    <header><h1>Welcome to Url Shortner with .NET 6</h1></header>
+
+    <main>
+        <section>
+            <aside style="width: 25rem;">
+                <label>
+                    Enter the url
+                    <input type="url" id="url" style="width: 22rem; margin: 0.5rem 0" />
+                </label>
+                <button type="button" id="btnSubmit" style="padding: 0.5rem 1rem">Submit</button>
+                <p id="urlResult"></p>
+            </aside>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('btnSubmit')
+            .addEventListener('click', e => {
+                e.preventDefault();
+                handleSubmitAsync();
+            });
+
+        document.getElementById('url')
+            .addEventListener('keyup', function (evt) {
+                if (evt.code === 'Enter') {
+                    event.preventDefault();
+                    handleSubmitAsync();
+                }
+            });
+
+        function handleSubmitAsync() {
+            const url = document.getElementById('url').value;
+
+            const json = { 'url': url };
+
+            const headers = { 'content-type': 'application/json' };
+
+            fetch('/urls', { method: 'post', body: JSON.stringify(json), headers: headers })
+                .then(apiResult => {
+                    return new Promise(resolve => apiResult.json()
+                        .then(json => resolve({ ok: apiResult.ok, status: apiResult.status, json: json }))
+                    );
+                })
+                .then(({ json, ok, status }) => {
+                    if (ok) {
+                        const anchor = `<a href=${json.shortUrl} target="_blank">${json.shortUrl}</a>`;
+                        document.getElementById('urlResult').innerHTML = anchor;
+                    }
+                    else {
+                        alert(json.errorMessage);
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
