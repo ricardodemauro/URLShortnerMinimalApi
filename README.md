@@ -10,8 +10,28 @@ https://rmauro.dev/create-a-minimal-api-with-dotnet-6/
 
 Check out for more on https://rmauro.dev
 
+## Tools ##
+
+* Visual Studio Code/Visual Studio 2022
+
+* DotNet 6
+
+## Framework ##
+
+* No frameworks - just minimal apis
+
+### Licence ###
+
+* MIT - use it for free
+
+## Feature List ##
+
+- [x] Api to random generate url link
+- [x] UI to for the end-user
+- [x] Route that redirects the user to final destination
+
 ```javascript
-const contacts = {
+const author = {
   "twitter": "https://twitter.com/ricardodemauro",
   "blog": "https://rmauro.dev
 }
