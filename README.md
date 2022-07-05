@@ -37,10 +37,9 @@ const author = {
   "twitter": "https://twitter.com/ricardodemauro",
   "blog": "https://rmauro.dev
 }
+```
 
 ## Contribute
 
 - Did you find something that needs improviment - send a `PR` or create an `Issue`
 - Did you build something cool - send a `PR`
-
-```
