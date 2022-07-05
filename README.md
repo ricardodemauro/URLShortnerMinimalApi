@@ -9,3 +9,10 @@ Code developed with blog post
 https://rmauro.dev/create-a-minimal-api-with-dotnet-6/
 
 Check out for more on https://rmauro.dev
+
+```javascript
+const contacts = {
+  "twitter": "https://twitter.com/ricardodemauro",
+  "blog": "https://rmauro.dev
+}
+```
