@@ -30,9 +30,17 @@ Check out for more on https://rmauro.dev
 - [x] UI to for the end-user
 - [x] Route that redirects the user to final destination
 
+## Author(s)
+
 ```javascript
 const author = {
   "twitter": "https://twitter.com/ricardodemauro",
   "blog": "https://rmauro.dev
 }
+
+## Contribute
+
+- Did you find something that needs improviment - send a `PR` or create an `Issue`
+- Did you build something cool - send a `PR`
+
 ```
