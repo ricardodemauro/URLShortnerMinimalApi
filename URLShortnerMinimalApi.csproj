@@ -4,11 +4,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dfca28d5-4d71-4051-b3ab-fd5357068427</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.12" />
+    <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
     <PackageReference Include="Nanoid" Version="2.1.0" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
   </ItemGroup>
 
 </Project>
