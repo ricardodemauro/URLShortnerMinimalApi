@@ -35,12 +35,12 @@ namespace URLShortnerMinimalApi.Routes
 
                     await db.Create(shortDb);
 
-                    var rawShortUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}/{shortUrl.Chunck}";
+                    var rawShortUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}/{shortDb.Chunck}";
 
                     return Results.Ok(new { ShortUrl = rawShortUrl });
                 }
                 return Results.BadRequest(new { ErrorMessage = "Invalid Url" });
-            });
+            }).RequireAuthorization("create:url");
 
             app.MapGet("/urls", (IApplicationDb db) => Results.Ok(db.GetAll()));
 
