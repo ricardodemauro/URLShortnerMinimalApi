@@ -26,16 +26,17 @@ namespace URLShortnerMinimalApi.Routes
                 {
                     var chunck = Nanoid.Nanoid.Generate(size: 9);
 
-                    var shortDb = shortUrl with
+                    var shortDb = new ShortUrl
                     {
                         Active = true,
                         Chunck = chunck,
-                        Created = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        Url = shortUrl.Url
                     };
 
                     await db.Create(shortDb);
 
-                    var rawShortUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}/{shortUrl.Chunck}";
+                    var rawShortUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}/{shortDb.Chunck}";
 
                     return Results.Ok(new { ShortUrl = rawShortUrl });
                 }

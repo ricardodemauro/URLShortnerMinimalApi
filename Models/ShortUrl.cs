@@ -1,9 +1,26 @@
-﻿using MongoDB.Bson;
+﻿using Postgrest.Attributes;
+using Supabase;
 
 namespace URLShortnerMinimalApi.Models
 {
-    public record class ShortUrl(string Url, string Chunck, bool Active, DateTime Created)
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    [Table("ShortUrls")]
+    public class ShortUrl : SupabaseModel
     {
-        public string? Id { get; set; }
+        [Column("url")]
+        public string Url { get; set; }
+
+        [Column("chunck")]
+        public string Chunck { get; set; }
+
+        [Column("active")]
+        public bool Active { get; set; }
+
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [PrimaryKey("id", false)]
+        public int Id { get; set; }
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

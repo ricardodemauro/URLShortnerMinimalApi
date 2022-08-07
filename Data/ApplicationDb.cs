@@ -1,42 +1,36 @@
-﻿using MongoDB.Driver;
-using URLShortnerMinimalApi.Models;
-using URLShortnerMinimalApi.Mongo;
+﻿using URLShortnerMinimalApi.Models;
+using URLShortnerMinimalApi.SupabaseProxy;
 
 namespace URLShortnerMinimalApi.Data
 {
     public class ApplicationDb : IApplicationDb
     {
-        readonly MongoProxy _proxy;
+        readonly PgDatabase _proxy;
 
-        public ApplicationDb(MongoProxy proxy)
+        public ApplicationDb(PgDatabase proxy)
         {
             _proxy = proxy ?? throw new ArgumentNullException(nameof(proxy));
         }
 
         public async Task<ShortUrl> Create(ShortUrl data)
         {
-            await _proxy.Database.GetCollectionShortUrl().InsertOneAsync(data);
+            var d = await _proxy.Add<ShortUrl>(data);
 
             return data;
         }
 
         public async Task<List<ShortUrl>> GetAll(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<ShortUrl>.Filter.Eq(x => x.Active, true);
-            var sort = Builders<ShortUrl>.Sort.Descending(x => x.Created);
+            var all = await _proxy.List<ShortUrl>();
 
-            var all = _proxy.Database.GetCollectionShortUrl().Find(filter).Sort(sort);
-
-            return await all.ToListAsync(cancellationToken);
+            return all;
         }
 
         public async Task<ShortUrl> GetByChunckId(string chunckId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<ShortUrl>.Filter.Eq(x => x.Active, true);
+            var all = await _proxy.Get<ShortUrl, string>("chunck", chunckId);
 
-            var all = _proxy.Database.GetCollectionShortUrl().Find(filter);
-
-            return await all.FirstOrDefaultAsync(cancellationToken);
+            return all;
         }
     }
 }
