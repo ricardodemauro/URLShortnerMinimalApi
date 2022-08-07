@@ -137,18 +137,6 @@
             const btnLogin = document.getElementById('qsLoginBtn');
             btnLogin.disabled = isAuthenticated;
             btnLogin.style.display = isAuthenticated ? 'none' : 'inline-block';
-
-            //const user = await auth0.getUser();
-
-            //console.log(user);
-            //console.log('here is the access')
-
-            //const accessTokenScopes = {
-            //    scope: 'read:messages',
-            //};
-            //const accessToken = await auth0.getTokenSilently(accessTokenScopes);
-
-            //console.log(accessToken);
         };
 
         const login = async () => {
@@ -156,10 +144,6 @@
                 redirect_uri: window.location.origin,
                 scope: window.cred.scope
             });
-            //await auth0.loginWithPopup({
-            //    audience: 'https://mydomain/api/',
-            //    scope: 'read:rules'
-            //});
         };
 
         const logout = () => {
