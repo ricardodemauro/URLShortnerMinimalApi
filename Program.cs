@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 using URLShortnerMinimalApi.Data;
 using URLShortnerMinimalApi.Extensions;
@@ -31,7 +32,12 @@ builder.Services.AddAndConfigureAuth0(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/static",
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
