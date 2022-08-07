@@ -1,9 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
     <title>Url Shortner .NET 6</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/static/cdn/bootstrap-5.0.2-dist/css/bootstrap.css" />
     <style>
         nav.site-header {
             background-color: rgba(0, 0, 0, .85);
@@ -51,14 +54,13 @@
             </div>
 
             <div class="container">
-                <div class="col-12 mt-5">
-                    <form class="" autocomplete="off" method="get" action="/">
-                        <div class="form-group row">
-
-                            <label class="col col-form-label" for="url">Enter the url</label>
-                            <div class="col-sm-9">
-                                <input class="form-control mr-2" type="url" name="url" id="url" placeholder="https://google.com" />
-                            </div>
+                <div class="col-12 my-5">
+                    <form class="row justify-content-md-center g-3" autocomplete="off" method="get" action="/">
+                        <div class="col-md-5 col-auto">
+                            <label for="url" class="visually-hidden">Enter the url</label>
+                            <input type="url" class="form-control" name="url" id="url" placeholder="Enter the url">
+                        </div>
+                        <div class="col-auto">
                             <button type="button" id="btnSubmit" class="btn btn-primary mb-2">Submit</button>
                         </div>
                     </form>
@@ -71,19 +73,21 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">URLs created so far</h5>
-                        <table class="table" id="table-results">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Short Url</th>
-                                    <th scope="col">Destination Url</th>
-                                    <th scope="col">Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-responsive caption-top" id="table-results">
+                                <caption>URLs created until now</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Short Url</th>
+                                        <th scope="col">Destination Url</th>
+                                        <th scope="col">Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
