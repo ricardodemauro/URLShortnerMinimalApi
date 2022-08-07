@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 using URLShortnerMinimalApi.Data;
+using URLShortnerMinimalApi.Extensions;
 using URLShortnerMinimalApi.Models;
 
 namespace URLShortnerMinimalApi.Endpoints
@@ -32,7 +33,8 @@ namespace URLShortnerMinimalApi.Endpoints
                         Chunck = chunck,
                         CreatedAt = DateTime.UtcNow,
                         Url = shortUrl.Url,
-                        UserSub = ctx?.User?.Identity?.Name ?? string.Empty
+                        UserSub = ctx?.User?.UserId() ?? string.Empty,
+                        UserDisplay = ctx?.User?.UserDisplay() ?? string.Empty
                     };
 
                     await db.Create(shortDb);
