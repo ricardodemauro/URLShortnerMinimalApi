@@ -154,7 +154,7 @@
         const login = async () => {
             await auth0.loginWithRedirect({
                 redirect_uri: window.location.origin,
-                //scope: window.cred.scope
+                scope: window.cred.scope
             });
             //await auth0.loginWithPopup({
             //    audience: 'https://mydomain/api/',

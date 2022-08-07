@@ -1,12 +1,14 @@
 using Serilog;
 using URLShortnerMinimalApi.Data;
 using URLShortnerMinimalApi.Extensions;
-using URLShortnerMinimalApi.Models;
 using URLShortnerMinimalApi.Routes;
 using URLShortnerMinimalApi.SupabaseProxy;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.Extensions.Hosting", Serilog.Events.LogEventLevel.Debug)
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,9 +25,8 @@ var key = builder.Configuration["Supabase:Key"] ?? Environment.GetEnvironmentVar
 
 await Supabase.Client.InitializeAsync(url, key);
 
-builder.Services.AddTransient<PgDatabase>();
 builder.Services.AddTransient<IApplicationDb, ApplicationDb>();
-builder.Services.AddAndConfigureDatabase(builder.Configuration);
+builder.Services.AddTransient<PgDatabase>();
 builder.Services.AddAndConfigureAuth0(builder.Configuration);
 
 var app = builder.Build();
@@ -35,6 +36,6 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapShortcutEndpoints();
+app.MapShortUrlEndpoints();
 
 app.Run();

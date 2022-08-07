@@ -6,7 +6,7 @@ namespace URLShortnerMinimalApi.Routes
 {
     public static class ShortUrlEndpoints
     {
-        public static void MapShortcutEndpoints(this IEndpointRouteBuilder app)
+        public static void MapShortUrlEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapGet("/", async (HttpContext ctx) =>
             {
@@ -31,12 +31,15 @@ namespace URLShortnerMinimalApi.Routes
                         Active = true,
                         Chunck = chunck,
                         CreatedAt = DateTime.UtcNow,
-                        Url = shortUrl.Url
+                        Url = shortUrl.Url,
+                        UserSub = ctx?.User?.Identity?.Name ?? string.Empty
                     };
 
                     await db.Create(shortDb);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     var rawShortUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}/{shortDb.Chunck}";
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                     return Results.Ok(new { ShortUrl = rawShortUrl });
                 }

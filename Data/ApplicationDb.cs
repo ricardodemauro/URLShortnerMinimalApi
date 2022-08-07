@@ -14,9 +14,9 @@ namespace URLShortnerMinimalApi.Data
 
         public async Task<ShortUrl> Create(ShortUrl data)
         {
-            var d = await _proxy.Add<ShortUrl>(data);
+            var dbResult = await _proxy.Add(data);
 
-            return data;
+            return dbResult;
         }
 
         public async Task<List<ShortUrl>> GetAll(CancellationToken cancellationToken = default)
