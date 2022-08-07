@@ -110,12 +110,10 @@
         }
     </script>
     <script>
-        //const currentUrl = location.protocol + '//' + location.host;
         window.cred = {
             "domain": "rmaurodev.us.auth0.com",
             "clientId": "BEUw3cx6VYyMft8m6OvzZlXTl0nC7ErE",
-            "audience": 'HerokuUrlShort',
-            "scope": "openid profile email create:url"
+            "audience": "https://heroku-url-short.herokuapp.com/"
         };
 
         window.auth0 = null;
@@ -142,8 +140,8 @@
 
         const login = async () => {
             await auth0.loginWithRedirect({
-                redirect_uri: window.location.origin,
-                scope: window.cred.scope
+                'redirect_uri': window.location.origin,
+                'scope': "openid profile email create:url"
             });
         };
 
@@ -160,7 +158,6 @@
                 // show the gated content
                 return;
             }
-
             // NEW - check for the code and state parameters
             const query = window.location.search;
             if (query.includes("code=") && query.includes("state=")) {
