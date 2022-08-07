@@ -110,10 +110,11 @@
         }
     </script>
     <script>
+        const currentUrl = location.protocol + '//' + location.host;
         window.cred = {
             "domain": "rmaurodev.us.auth0.com",
             "clientId": "fYLEPi0dBNxeYPe3kXQ1DRkfTHOJcppV",
-            "audience": "https://localhost:7128/",
+            "audience": currentUrl,
             "scope": "openid profile email create:url"
         };
 
