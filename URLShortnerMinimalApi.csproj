@@ -16,4 +16,8 @@
     <PackageReference Include="supabase-csharp" Version="0.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\cdn\jquery-template-1.5.10\" />
+  </ItemGroup>
+
 </Project>
