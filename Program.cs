@@ -1,8 +1,8 @@
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 using URLShortnerMinimalApi.Data;
+using URLShortnerMinimalApi.Endpoints;
 using URLShortnerMinimalApi.Extensions;
-using URLShortnerMinimalApi.Routes;
 using URLShortnerMinimalApi.SupabaseProxy;
 
 Log.Logger = new LoggerConfiguration()

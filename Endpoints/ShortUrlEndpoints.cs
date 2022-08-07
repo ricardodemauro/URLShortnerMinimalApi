@@ -2,7 +2,7 @@
 using URLShortnerMinimalApi.Data;
 using URLShortnerMinimalApi.Models;
 
-namespace URLShortnerMinimalApi.Routes
+namespace URLShortnerMinimalApi.Endpoints
 {
     public static class ShortUrlEndpoints
     {
@@ -46,7 +46,7 @@ namespace URLShortnerMinimalApi.Routes
                 return Results.BadRequest(new { ErrorMessage = "Invalid Url" });
             }).RequireAuthorization("create:url");
 
-            app.MapGet("/urls", (IApplicationDb db) => Results.Ok(db.GetAll()));
+            app.MapGet("/urls", async (IApplicationDb db) => Results.Ok(await db.GetAll()));
 
         }
     }
