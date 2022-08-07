@@ -1,5 +1,7 @@
 using Serilog;
 using URLShortnerMinimalApi.Data;
+using URLShortnerMinimalApi.Extensions;
+using URLShortnerMinimalApi.Models;
 using URLShortnerMinimalApi.Routes;
 using URLShortnerMinimalApi.SupabaseProxy;
 
@@ -23,10 +25,15 @@ await Supabase.Client.InitializeAsync(url, key);
 
 builder.Services.AddTransient<PgDatabase>();
 builder.Services.AddTransient<IApplicationDb, ApplicationDb>();
+builder.Services.AddAndConfigureDatabase(builder.Configuration);
+builder.Services.AddAndConfigureAuth0(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapShortcutEndpoints();
 

@@ -3,23 +3,67 @@
 <head>
     <meta charset="utf-8" />
     <title>Url Shortner .NET 6</title>
-    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+        nav.site-header {
+            background-color: rgba(0, 0, 0, .85);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+
+            nav.site-header a {
+                color: #999;
+                transition: ease-in-out color .15s;
+            }
+    </style>
+
 </head>
 <body>
-    <header><h1>Welcome to Url Shortner with .NET 6</h1></header>
+    <nav class="site-header sticky-top py-1">
+        <div class="container d-flex flex-column flex-md-row justify-content-between">
+            <a class="py-2" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"></circle><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"></path></svg>
+            </a>
+            <!--<a class="py-2 d-none d-md-inline-block" href="#">Login</a>-->
+            <button id="qsLoginBtn"
+                    onclick="login()"
+                    class="btn btn-primary py-2">
+                Log in
+            </button>
+            <button id="qsLogoutBtn" class="btn btn-light py-2" onclick="logout()">Log out</button>
+        </div>
+    </nav>
 
-    <main>
-        <section>
-            <aside style="width: 25rem;">
-                <label>
-                    Enter the url
-                    <input type="url" id="url" style="width: 22rem; margin: 0.5rem 0" />
-                </label>
-                <button type="button" id="btnSubmit" style="padding: 0.5rem 1rem">Submit</button>
-                <p id="urlResult"></p>
-            </aside>
-        </section>
-    </main>
+    <div id="main-content" class="container mt-5 flex-grow-1">
+        <div id="content-home" class="page">
+            <div class="text-center hero">
+                <h1 class="mb-4">Welcome to Url Shortner with .NET 6</h1>
+
+                <p class="lead">
+                    This is a sample application made with .NET 6 to demonstrate Minimal APIs in action
+                </p>
+            </div>
+
+            <div class="container">
+                <div class="col-12 mt-5">
+                    <form class="" autocomplete="off" method="get" action="/">
+                        <div class="form-group row">
+
+                            <label class="col col-form-label" for="url">Enter the url</label>
+                            <div class="col-sm-9">
+                                <input class="form-control mr-2" type="url" name="url" id="url" placeholder="https://google.com" />
+                            </div>
+                            <button type="button" id="btnSubmit" class="btn btn-primary mb-2">Submit</button>
+                        </div>
+                    </form>
+
+                    <p id="urlResult"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
 
     <script>
         document.getElementById('btnSubmit')
@@ -36,12 +80,17 @@
                 }
             });
 
-        function handleSubmitAsync() {
+        async function handleSubmitAsync() {
             const url = document.getElementById('url').value;
 
             const json = { 'url': url };
 
-            const headers = { 'content-type': 'application/json' };
+            const accessTokenScopes = {
+                scope: 'create:url',
+            };
+            const accessToken = await auth0.getTokenSilently(accessTokenScopes);
+
+            const headers = { 'content-type': 'application/json', 'Authorization': `Bearer ${accessToken}` };
 
             fetch('/urls', { method: 'post', body: JSON.stringify(json), headers: headers })
                 .then(apiResult => {
@@ -58,6 +107,87 @@
                         alert(json.errorMessage);
                     }
                 });
+        }
+    </script>
+    <script>
+        window.cred = {
+            "domain": "rmaurodev.us.auth0.com",
+            "clientId": "fYLEPi0dBNxeYPe3kXQ1DRkfTHOJcppV",
+            "audience": "https://localhost:7128/",
+            "scope": "openid profile email create:url"
+        };
+
+        window.auth0 = null;
+
+        const configureClient = async () => {
+            auth0 = await createAuth0Client({
+                domain: window.cred.domain,
+                client_id: window.cred.clientId,
+                audience: window.cred.audience   // NEW - add the audience value
+            });
+        };
+
+        const updateUI = async () => {
+            const isAuthenticated = await auth0.isAuthenticated();
+
+            const btnLogout = document.getElementById('qsLogoutBtn');
+            btnLogout.disabled = !isAuthenticated;
+            btnLogout.style.display = !isAuthenticated ? 'none' : 'inline-block';
+
+            const btnLogin = document.getElementById('qsLoginBtn');
+            btnLogin.disabled = isAuthenticated;
+            btnLogin.style.display = isAuthenticated ? 'none' : 'inline-block';
+
+            //const user = await auth0.getUser();
+
+            //console.log(user);
+            //console.log('here is the access')
+
+            //const accessTokenScopes = {
+            //    scope: 'read:messages',
+            //};
+            //const accessToken = await auth0.getTokenSilently(accessTokenScopes);
+
+            //console.log(accessToken);
+        };
+
+        const login = async () => {
+            await auth0.loginWithRedirect({
+                redirect_uri: window.location.origin,
+                //scope: window.cred.scope
+            });
+            //await auth0.loginWithPopup({
+            //    audience: 'https://mydomain/api/',
+            //    scope: 'read:rules'
+            //});
+        };
+
+        const logout = () => {
+            auth0.logout();
+        }
+
+        window.onload = async () => {
+            await configureClient();
+            updateUI();
+            const isAuthenticated = await auth0.isAuthenticated();
+
+            if (isAuthenticated) {
+                // show the gated content
+                return;
+            }
+
+            // NEW - check for the code and state parameters
+            const query = window.location.search;
+            if (query.includes("code=") && query.includes("state=")) {
+
+                // Process the login state
+                await auth0.handleRedirectCallback();
+
+                updateUI();
+
+                // Use replaceState to redirect the user away and remove the querystring parameters
+                window.history.replaceState({}, document.title, "/");
+            }
         }
     </script>
 </body>
