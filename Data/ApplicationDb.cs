@@ -19,11 +19,11 @@ namespace URLShortnerMinimalApi.Data
             return dbResult;
         }
 
-        public async Task<List<ShortUrl>> GetAll(CancellationToken cancellationToken = default)
+        public async Task<List<ShortUrlNeat>> GetAll(CancellationToken cancellationToken = default)
         {
             var all = await _proxy.List<ShortUrl>();
 
-            return all;
+            return all.Select(x => x.ToNeat()).ToList();
         }
 
         public async Task<ShortUrl> GetByChunckId(string chunckId, CancellationToken cancellationToken = default)

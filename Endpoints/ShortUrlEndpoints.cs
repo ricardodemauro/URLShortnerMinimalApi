@@ -34,7 +34,9 @@ namespace URLShortnerMinimalApi.Endpoints
                         CreatedAt = DateTime.UtcNow,
                         Url = shortUrl.Url,
                         UserSub = ctx?.User?.UserId() ?? string.Empty,
-                        UserDisplay = ctx?.User?.UserDisplay() ?? string.Empty
+                        UserDisplay = ctx?.User?.UserDisplay() ?? string.Empty,
+                        UserEmail = ctx?.User?.UserEmail() ?? string.Empty,
+                        UserUrl = $"https://github.com/{ctx?.User.UserNickname()}"
                     };
 
                     await db.Create(shortDb);

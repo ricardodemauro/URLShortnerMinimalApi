@@ -23,13 +23,14 @@
     <script type="text/html" id="template-table">
         <tr>
             <th data-content="id"></th>
+            <td><a target="_blank" href="#" data-link="chunck" data-content="chunck"></a></td>
+            <td><a target="_blank" href="#" data-href="userUrl" data-content="userUrl"></a></td>
+            <td data-content="createdAt" data-format="dateFormatter"></td>
             <td>
-                <a target="_blank" href="#" data-link="chunck" data-content="chunck">
+                <a target="_blank" href="#" data-link="chunck" data-format="shortUrlFormatter">
+                    <span data-content="url"></span>
                 </a>
             </td>
-            <td data-content="url"></td>
-            <td data-content="createdAt" data-format="dateFormatter"></td>
-            <td data-content="userDisplay"></td>
         </tr>
     </script>
 </head>
@@ -57,12 +58,15 @@
             <div class="container">
                 <div class="col-12 my-5">
                     <form class="row justify-content-md-center g-3" autocomplete="off" method="get" action="/">
-                        <div class="col-md-5 col-auto">
+                        <div class="col-9 col-md-5 col-sm-9 col-auto">
                             <label for="url" class="visually-hidden">Enter the url</label>
                             <input type="url" class="form-control" name="url" id="url" placeholder="Enter the url">
                         </div>
                         <div class="col-auto">
-                            <button type="button" id="btnSubmit" class="btn btn-primary mb-2">Submit</button>
+                            <div id="btnSubmitContainer" class="tooltip-wrapper" data-toggle="tooltip" data-placement="top" title="You must log in first">
+                                <button type="button" id="btnSubmit" class="btn btn-primary mb-2">Submit</button>
+                            </div>
+
                         </div>
                     </form>
 
@@ -81,9 +85,9 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Short Url</th>
-                                        <th scope="col">Destination Url</th>
-                                        <th scope="col">Created At</th>
                                         <th scope="col">Created By</th>
+                                        <th scope="col">Created At</th>
+                                        <th scope="col">Destination Url</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,6 +103,9 @@
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
 
     <script src="/static/cdn/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+    <script src="/static/cdn/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="/static/cdn/jquery-template-1.5.10/jquery.loadTemplate.min.js"></script>
 
     <script src="/static/js/site.js"></script>

@@ -95,6 +95,13 @@ const updateUI = async () => {
     const btnLogin = document.getElementById('qsLoginBtn');
     btnLogin.disabled = isAuthenticated;
     btnLogin.style.display = isAuthenticated ? 'none' : 'inline-block';
+
+    const btnSubmit = document.getElementById('btnSubmit');
+    btnSubmit.disabled = !isAuthenticated;
+
+    if (isAuthenticated) {
+        $('[data-toggle="tooltip"]').tooltip('disable')
+    }
 };
 
 const login = async () => {
@@ -108,11 +115,13 @@ const logout = () => {
     auth0.logout();
 }
 
-window.onload = async () => {
-    await fnLoadRecords();
+$(async function () {
+    $('[data-toggle="tooltip"]').tooltip()
 
-    await configureClient();
+    await Promise.all([fnLoadRecords(), configureClient()])
+
     updateUI();
+
     const isAuthenticated = await auth0.isAuthenticated();
 
     if (isAuthenticated) {
@@ -131,4 +140,4 @@ window.onload = async () => {
         // Use replaceState to redirect the user away and remove the querystring parameters
         window.history.replaceState({}, document.title, "/");
     }
-}
+})

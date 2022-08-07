@@ -13,6 +13,6 @@ namespace URLShortnerMinimalApi.Data
 
         Task<ShortUrl> Create(ShortUrl data);
 
-        Task<List<ShortUrl>> GetAll(CancellationToken cancellationToken = default);
+        Task<List<ShortUrlNeat>> GetAll(CancellationToken cancellationToken = default);
     }
 }

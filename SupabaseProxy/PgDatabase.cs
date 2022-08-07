@@ -29,7 +29,7 @@ namespace URLShortnerMinimalApi.SupabaseProxy
 
             var channels = await instance.From<T>().Get();
 
-            _logger.LogInformation("ApiResponse {Content}", channels?.Content);
+            _logger.LogDebug("ApiResponse {Content}", channels?.Content);
 
             return channels?.Models ?? new List<T>();
         }
@@ -45,7 +45,7 @@ namespace URLShortnerMinimalApi.SupabaseProxy
 
             var channels = await instance.From<T>().Match(filter).Single();
 
-            _logger.LogInformation("return from {channels}", channels);
+            _logger.LogDebug("return from {channels}", channels);
 
             return channels;
         }
