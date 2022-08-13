@@ -1,143 +1,66 @@
-﻿document.getElementById('btnSubmit')
-    .addEventListener('click', e => {
-        e.preventDefault();
-        handleSubmitAsync();
-    });
+﻿const app = {
+    supaUrl: "https://tqqcjengpfcxqdiptxwv.supabase.co",
+    publicId: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxcWNqZW5ncGZjeHFkaXB0eHd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjA0MjQ0NzUsImV4cCI6MTk3NjAwMDQ3NX0.jDbmMJVrE0hWKdR4HaPG67DitSpY8quU5mREMZhlavU",
 
-document.getElementById('url')
-    .addEventListener('keyup', function (evt) {
-        if (evt.code === 'Enter') {
-            event.preventDefault();
-            handleSubmitAsync();
-        }
-    });
+    init: function () {
+        $('[data-toggle="tooltip"]').tooltip()
 
-async function handleSubmitAsync() {
-    const url = document.getElementById('url').value;
+        app.initBindings();
 
-    const json = { 'url': url };
+        // Create a single supabase client for interacting with your database 
+        window.supabase = window.supabase.createClient(app.supaUrl, app.publicId)
 
-    const accessTokenScopes = {
-        scope: 'create:url',
-    };
-    const accessToken = await auth0.getTokenSilently(accessTokenScopes);
+        app.ui.updateButtons();
+    },
 
-    const headers = { 'content-type': 'application/json', 'Authorization': `Bearer ${accessToken}` };
+    isAuthenticated: () => false,
 
-    fetch('/urls', { method: 'post', body: JSON.stringify(json), headers: headers })
-        .then(apiResult => {
-            return new Promise(resolve => apiResult.json()
-                .then(json => resolve({ ok: apiResult.ok, status: apiResult.status, json: json }))
-            );
-        })
-        .then(({ json, ok, status }) => {
-            if (ok) {
-                const anchor = `<a href=${json.shortUrl} target="_blank">${json.shortUrl}</a>`;
-                document.getElementById('urlResult').innerHTML = anchor;
+    initBindings: function () {
+        document.getElementById('qsLoginBtn').addEventListener('click', app.events.login);
+
+        document.getElementById('qsLogoutBtn').addEventListener('click', app.events.logout);
+    },
+
+    events: {
+        login: async function () {
+            const oAuthOpts = {
+                scopes: 'user:email user:follow'
             }
-            else {
-                alert(json.errorMessage);
+            const authOptions = {
+                provider: 'github'
             }
-        });
-}
+            const { user, session, error } = await supabase.auth.signIn(authOptions, oAuthOpts)
 
-const fnLoadRecords = async () => {
-    $.addTemplateFormatter({
-        shortUrlFormatter: function (value, template) {
-            const full = location.protocol + '//' + location.host;
-            return `${full}/${value}`;
+            const oAuthToken = session.provider_token;
+            console.log(oAuthToken)
         },
-        dateFormatter: function (value, template) {
-            const d = new Date(value);
-            const options = {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric'
-            };
-            return d.toLocaleString('en-us', options)
+
+        logout: async function () {
+            const { error } = await supabase.auth.signOut()
+            console.log('signed out')
         }
-    });
+    },
 
-    const apiResult = await fetch('/urls');
-    if (apiResult.ok) {
-        const json = await apiResult.json();
+    ui: {
+        updateButtons: function () {
+            const isAuthenticated = app.isAuthenticated();
 
-        console.table(json)
-        $("#table-results > tbody").loadTemplate($("#template-table"), json, { error: function (e) { console.log(e); } });
+            const btnLogout = document.getElementById('qsLogoutBtn');
+            btnLogout.disabled = !isAuthenticated;
+            btnLogout.style.display = !isAuthenticated ? 'none' : 'inline-block';
+
+            const btnLogin = document.getElementById('qsLoginBtn');
+            btnLogin.disabled = isAuthenticated;
+            btnLogin.style.display = isAuthenticated ? 'none' : 'inline-block';
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = !isAuthenticated;
+
+            if (isAuthenticated) {
+                $('[data-toggle="tooltip"]').tooltip('disable')
+            }
+        }
     }
-};
-
-window.cred = {
-    "domain": "rmaurodev.us.auth0.com",
-    "clientId": "BEUw3cx6VYyMft8m6OvzZlXTl0nC7ErE",
-    "audience": "https://heroku-url-short.herokuapp.com/"
-};
-
-window.auth0 = null;
-
-const configureClient = async () => {
-    auth0 = await createAuth0Client({
-        domain: window.cred.domain,
-        client_id: window.cred.clientId,
-        audience: window.cred.audience   // NEW - add the audience value
-    });
-};
-
-const updateUI = async () => {
-    const isAuthenticated = await auth0.isAuthenticated();
-
-    const btnLogout = document.getElementById('qsLogoutBtn');
-    btnLogout.disabled = !isAuthenticated;
-    btnLogout.style.display = !isAuthenticated ? 'none' : 'inline-block';
-
-    const btnLogin = document.getElementById('qsLoginBtn');
-    btnLogin.disabled = isAuthenticated;
-    btnLogin.style.display = isAuthenticated ? 'none' : 'inline-block';
-
-    const btnSubmit = document.getElementById('btnSubmit');
-    btnSubmit.disabled = !isAuthenticated;
-
-    if (isAuthenticated) {
-        $('[data-toggle="tooltip"]').tooltip('disable')
-    }
-};
-
-const login = async () => {
-    await auth0.loginWithRedirect({
-        'redirect_uri': window.location.origin,
-        'scope': "openid profile email create:url"
-    });
-};
-
-const logout = () => {
-    auth0.logout();
 }
 
-$(async function () {
-    $('[data-toggle="tooltip"]').tooltip()
-
-    await Promise.all([fnLoadRecords(), configureClient()])
-
-    updateUI();
-
-    const isAuthenticated = await auth0.isAuthenticated();
-
-    if (isAuthenticated) {
-        // show the gated content
-        return;
-    }
-    // NEW - check for the code and state parameters
-    const query = window.location.search;
-    if (query.includes("code=") && query.includes("state=")) {
-
-        // Process the login state
-        await auth0.handleRedirectCallback();
-
-        updateUI();
-
-        // Use replaceState to redirect the user away and remove the querystring parameters
-        window.history.replaceState({}, document.title, "/");
-    }
-})
+window.onload = () => app.init();
