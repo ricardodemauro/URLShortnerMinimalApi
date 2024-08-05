@@ -35,7 +35,8 @@ Check out for more on https://rmauro.dev
 ```javascript
 const author = {
   "twitter": "https://twitter.com/ricardodemauro",
-  "blog": "https://rmauro.dev
+  "blog": "https://rmauro.dev",
+  "publishedAt": "https://rmauro.dev/create-a-minimal-api-with-dotnet-6/"
 }
 ```
 
